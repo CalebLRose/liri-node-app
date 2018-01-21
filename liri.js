@@ -3,6 +3,7 @@ var keys = require("./keys.js");
 var Twitter = require('twitter');
 var Spotify = require("node-spotify-api");
 var request = require("request");
+var fs = require("fs");
 var spotify = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter);
 var input = process.argv[2];
@@ -12,7 +13,6 @@ var input2 = "";
 for (var i = 3; i < process.argv.length; i++) {
 	input2 += process.argv[i]+" ";
 };
-
 
 // twitter display
 if (input === "my-tweets"){
@@ -37,8 +37,8 @@ if (input === "my-tweets"){
 	});
 };
 
-// Spotify song search
-if(input === "spotify-this-song"){
+// spotify function
+function spotifySearch(){
 	spotify.search({ type: 'track', query: input2, limit:1 }, function(err, data) {
   		if (err) {
     		return console.log('Error occurred: ' + err);
@@ -59,6 +59,25 @@ if(input === "spotify-this-song"){
 		console.log(preview);
 		console.log("\n---------------------");
 	});
+};
+
+// random
+if (input = "do-what-it-says"){
+	fs.readFile("random.txt","utf8", function(err, data){
+		if(err){
+			return console.log(error);
+		};
+		// console.log(data);
+		var dataArr = data.split(",");
+		// console.log(dataArr[1]);
+		input2 = dataArr[1];
+		// console.log(input2);
+		spotifySearch();
+	});
+};
+// Spotify song search
+if(input === "spotify-this-song"){
+	spotifySearch();
 };
 
 // omdb request
@@ -94,4 +113,3 @@ if (input === "movie-this"){
   		}
 	});
 };
-
