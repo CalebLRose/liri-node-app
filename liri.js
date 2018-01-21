@@ -7,19 +7,34 @@ var client = new Twitter(keys.twitter);
 var input = process.argv[2];
 var input2 = "";
 
+// song search so that the user doesn't need to use quotes
 for (var i = 3; i < process.argv.length; i++) {
 	input2 += process.argv[i]+" ";
 };
 
-// if (input === "my-tweets"){
-// 	client.get('tweets', function(error, tweets, response) {
-//   		if(error){
-//   			console.log(error);
-//   		};
-//   		console.log(tweets);  // The favorites. 
-//   		// console.log(response);  // Raw response object. 
-// });
-// };
+
+// twitter display
+if (input === "my-tweets"){
+	client.get('statuses/user_timeline', function(error, tweets, response) {
+  		if(error){
+  			console.log(error);
+  		};
+  		// console.log(tweets);  // The favorites. 
+  		// console.log(response);  // Raw response object. 
+  		for (var j = 0; j < 20; j++) {
+  			if (tweets[j] == undefined) {
+  				break
+  			} else {
+  				console.log("---------------------\n");
+  				var tweeter = tweets[j].user.name;
+  				var text = tweets[j].text;
+  				var when = tweets[j].created_at;
+  				console.log(tweeter+": "+text);
+  				console.log(when+"\n");
+  			}
+  		}
+	});
+};
 
 // Spotify song search
 if(input === "spotify-this-song"){
