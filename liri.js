@@ -2,6 +2,7 @@ require("dotenv").config();
 var keys = require("./keys.js");
 var Twitter = require('twitter');
 var Spotify = require("node-spotify-api");
+var request = require("request");
 var spotify = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter);
 var input = process.argv[2];
@@ -58,5 +59,39 @@ if(input === "spotify-this-song"){
 		console.log(preview);
 		console.log("\n---------------------");
 	});
-}
+};
+
+// omdb request
+if (input === "movie-this"){
+	var noInput = "mr nobody";
+	if (!process.argv[3]){
+		movie = noInput;
+	} else {
+		movie = input2;
+	};
+	var queryUrl = "http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=40e9cece";
+	request(queryUrl,function(err,response,body){
+		if (!err && response.statusCode === 200) {
+			// console.log(JSON.parse(body));
+			console.log("---------------------\n");
+			var movTitle = JSON.parse(body).Title;
+			console.log("Title: "+movTitle);
+			var movYear = JSON.parse(body).Year;
+			console.log("Year: "+movYear);
+			var imdbRating = JSON.parse(body).Ratings[0].Value;
+			console.log("IMDB Rating: "+imdbRating);
+			var rtRating = JSON.parse(body).Ratings[1].Value;
+			console.log("Rotten Tomatoes Score: "+rtRating);
+			var produced = JSON.parse(body).Country;
+			console.log("Country: "+produced);
+			var movLang = JSON.parse(body).Language;
+			console.log("Language: "+movLang);
+			var movPlot = JSON.parse(body).Plot;
+			console.log("Plot: "+movPlot);
+			var actors = JSON.parse(body).Actors;
+			console.log("Actors: "+actors);
+			console.log("\n---------------------");
+  		}
+	});
+};
 
